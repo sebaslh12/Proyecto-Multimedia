@@ -9,13 +9,12 @@ import math
 
 #obtener y tratar la imagen
 def get_image(source,size=(128,128)):
-    image = Image.open(source)
+    image = Image.open(source)    
     img_color = image.resize(size, 1)
     img_grey = img_color.convert('L')
     img = np.array(img_grey, dtype=np.float)
     img.tolist()
     return img
-
 #Dimensiones de la region
 N=M=8
 
@@ -188,8 +187,7 @@ def desregion(Resultado):
     for index in range(0,15):
         Temp=desocho(Resultado)
         Salida=desreg(Salida,Temp)
-        del Resultado[0:16]
-        print "regresion"
+        del Resultado[0:16]        
     return Salida
 
 #Funcion principal que realiza dct, idct, divide en regiones y deja el formato de la imagen original
@@ -216,6 +214,8 @@ def Proyecto(Archivo):
         Resultado.append(F2xy)
     ImagenFinal=desregion(Resultado)
     ImagenFinal=np.asarray(ImagenFinal)
+    #Guardar imagen
+    cv2.imwrite('Dct.jpg',ImagenFinal)
     return ImagenFinal
 
 def GUICall1(Archivo):
@@ -227,9 +227,19 @@ def GUICall1(Archivo):
     #CODIGO PARA GUARDAR LA IMAGEN QUE ESTA GUARDA EN Img
 
 def GUICall2(Archivo):
-    Img=Proyecto(Archivo.get())
-    #CODIGO PARA MOSTRAR LAS IMAGENES, LA QUE SE ABRE POR EL INPUT Y LA QUE SE GENERA
-#GUI
+    #Img=Proyecto(Archivo.get())
+    text=Archivo.get()    
+    if len(text)>0:        
+        #CODIGO PARA GUARDAR LA IMAGEN QUE ESTA GUARDA EN Img
+        #CODIGO PARA MOSTRAR LAS IMAGENES, LA QUE SE ABRE POR EL INPUT Y LA QUE SE GENERA
+        cv2.imshow("Imagen",cv2.imread(Archivo.get()))
+        cv2.imshow("Compresion",cv2.imread("Dct.jpg"))
+        k = cv2.waitKey(0)
+        if k == 27:         # wait for ESC key to exit
+            cv2.destroyAllWindows()
+    else:
+         tkMessageBox.showinfo("IDCT Python","Digite el nombre de la imagen")
+    
 def main(window):    
     window.title("IDCT Python")    
     Frame1 = Frame(window)
@@ -253,9 +263,7 @@ def main(window):
     Para_resolver.grid(row=0, column=2)
     Validar.grid(row=1,column=2)
     Frame1.grid(row = 0, column = 0)
-#COMENTA SI ACTIVAS LA INTERFAZ
-#I=Proyecto("Cameraman.tif")
-#DESCOMENTA PARA ACTIVAR LA INTERFAZ
+#DCTRecursiva()
 root = Tk()
 main(window=root)
 root.mainloop()
